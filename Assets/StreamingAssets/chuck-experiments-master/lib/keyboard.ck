@@ -1,4 +1,4 @@
-class Keyboard extends Chubgraph {
+public class Keyboard extends Chubgraph {
     SndBuf wav[87];
     
     fun void load(string path) {
@@ -50,36 +50,44 @@ class Keyboard extends Chubgraph {
 }
 
 
-1 => global int stop;
+/*
 
 Keyboard kb => dac;
 
-kb.load(me.dir() + "piano");
+kb.load(me.dir() + "marimba");
 
-//https://www.youtube.com/watch?v=K-Da5wiw854
+1::second => now;
 
-// A  E F
-// 57 64 65
+<<< "starting" >>>;
 
-130 => float bpm;
-60 / bpm => float quarter;
-4 * quarter => float whole;
 
-// A G F E C
-[81, 79, 77, 76, 72] @=> int notes[];
-
-fun void right_hand() {
-    while (true) {
-        notes[Math.random2(0, 4)] => kb.play;
-        quarter::second => now;
-    }
+for (21 => int i; i < 80; ++i) {
+    kb.play(i);
+    500::ms => now;
 }
 
-spork~ right_hand();
 
 while (true) {
-    kb.play([57, 64]);
-    whole::second => now;
-    kb.play([57, 65]);
-    whole::second => now;
+
+for (0 => int i; i < 4; ++i) {
+    kb.play([60 - 12, 60, 65, 68]);
+    0.5::second => now;
 }
+
+for (0 => int i; i < 4; ++i) {
+    kb.play([58 - 12, 58, 65, 68]);
+    0.5::second => now;
+}
+
+for (0 => int i; i < 4; ++i) {
+    kb.play([60 - 12, 60, 64, 67]);
+    0.5::second => now;
+}
+
+for (0 => int i; i < 4; ++i) {
+    //F C F G#
+    kb.play([41, 60, 65, 68]);
+    0.5::second => now;
+}
+}
+/**/

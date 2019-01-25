@@ -1,5 +1,7 @@
 
+//https://www.youtube.com/watch?v=N1M1pHsc804
 
+//B E
 
 SinOsc s => ADSR e => dac;
 e.set(1::ms, 290::ms, 0, 600::ms);
