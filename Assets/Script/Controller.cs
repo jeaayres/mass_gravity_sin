@@ -14,10 +14,12 @@ public class Controller : MonoBehaviour {
     public Text winText;
     public Text loseText;
 
-    public ChuckSubInstance groundInstance;
+    //public ChuckSubInstance groundInstance;
 
     //Gets the attached GameObject Rigidbody property
     private Rigidbody rb;
+
+    private bool onlyOne = true;
 
     // Start is called once GameMode starts
     void Start ()
@@ -60,17 +62,22 @@ public class Controller : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag ("Death"))
         {
-            loseText.text = "You lose!";
-            groundInstance.RunFile("Death.ck");
+            loseText.text = "You died!";
+            //groundInstance.RunFile("Death.ck");
+            GetComponent<ChuckSubInstance>().RunFile("Death.ck");
         }
+
     }
 
     void SetCountText()
     {
         countText.text = "Points: " + score.ToString ();
-        if (count >= 15)
+        if (count >= 1 && onlyOne) //15
         {
+            onlyOne = false;
             winText.text = "Game finished. Points: " + score.ToString ();
+            //groundInstance.RunFile("Death.ck");
+            GetComponent<ChuckSubInstance>().RunFile("Victory.ck");
         }
     }
 }

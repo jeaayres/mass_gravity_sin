@@ -1,49 +1,73 @@
-// sound chain
-ModalBar modal => NRev reverb => dac;
-// set reverb mix
-.1 => reverb.mix;
-// modal bar parameters
-7 => modal.preset;
-.9 => modal.strikePosition;
-10 => modal.gain;
-
-
-// spork detune() as a child shred
-// note: must do this before entering into infinite loop below!
-spork ~ detune();
-
 0 => global int stop;
 
-// infinite time loop
-while( !stop )
-{
-	1 => modal.strike;
-	250::ms => now;
+class Imp {
+	// our Simple instrument patch
+	Impulse imp => ResonZ filt => dac;
 
-	.7 => modal.strike;
-	250::ms => now;
+	// some default settings
+	100.0 => filt.Q => filt.gain;
+	1000.0 => filt.freq;
 
-	.9 => modal.strike;
-	250::ms => now;
-
-
-	repeat( 4 )
-	// now play four quick notes
+	// set freq as we would any instrument
+	fun void setFreq(float freq)
 	{
-	// note! and wait
-	.5 => modal.strike;
-	62.5::ms => now;
+		freq => filt.freq;
+	}
+
+	// method to allow setting Q
+	fun void setQ(float Q)
+	{
+		Q => filt.Q;
+	}
+
+	// method to allow setting gain
+	fun void setGain(float gain)
+	{
+		filt.Q() * gain => imp.gain;
+	}
+
+
+	// play a note by firing impulse
+	fun void noteOn(float volume)
+	{
+		volume => imp.next;
 	}
 }
 
-// function to vary tuning over time
-fun void detune()
-{
-	while( !stop )
-	{
-	// update frequency sinusoidally
-	84 + Math.sin(now/second*.25*Math.PI) * 4 => Std.mtof => modal.freq;
-	// advance time (controls update rate)
-	5::ms => now;
+fun void hiHat (){
+	Noise o=> HPF h => ADSR e => dac;
+
+	7000 => h.freq;
+	1 => h.Q;
+	while ( !stop ) {
+		Math.random2f(0.4,0.6) => o.gain;
+
+		e.set(0.005::second, Math.random2f(0.1,0.2)::second, 0.0, 0.1::second);
+
+		e.keyOn();
+		0.2::second=>now;
+		e.keyOff();
+
+		e.set(0.005::second, Math.random2f(0.01,0.05)::second, 0.0, 0.1::second);
+
+		e.keyOn();
+		0.2::second=>now;
+		e.keyOff();
 	}
+}
+
+// Make an instance of (declare) one of our Simples
+Imp s;
+
+spork ~hiHat();
+
+while ( !stop ) {
+	// random frequency
+	Std.rand2f(900.0,1300.0) => s.setFreq;
+	Std.rand2f(50.0,150.0) => s.setQ;
+
+
+	// play a note and wait a bit
+	1 => s.noteOn;
+	0.1::second => now;
 }
