@@ -77,7 +77,7 @@ public class Controller : MonoBehaviour {
             onlyOne = false;
             winText.text = "Game finished. Points: " + score.ToString ();
             //groundInstance.RunFile("Death.ck");
-            GetComponent<ChuckSubInstance>().RunFile("Victory.ck");
+            GetComponent<ChuckSubInstance>().RunFile("Vic.ck");
         }
     }
 }
