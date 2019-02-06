@@ -72,7 +72,7 @@ public class Controller : MonoBehaviour {
     void SetCountText()
     {
         countText.text = "Points: " + score.ToString ();
-        if (count >= 1 && onlyOne) //15
+        if (count >= 15 && onlyOne) //15
         {
             onlyOne = false;
             winText.text = "Game finished. Points: " + score.ToString ();

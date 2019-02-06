@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour {
     //Gets the distance between camera and the ball
     private Vector3 offset;
 
+    public float theta = 0;
+
     // Start is called once GameMode starts
     void Start ()
     {
@@ -19,7 +21,12 @@ public class CameraController : MonoBehaviour {
     // LateUpdate is called once a frame, after all itens process Update
     void LateUpdate ()
     {
-        transform.position = player.transform.position + offset;
+        float c = Mathf.Cos(-theta * Mathf.PI / 180.0f);
+        float s = Mathf.Sin(-theta * Mathf.PI / 180.0f);
+        var p = new Vector3(s * 3, 2, -c * 3);
+
+        //transform.position = player.transform.position + offset;
+        transform.position = player.transform.position + p;
     }
 
 }

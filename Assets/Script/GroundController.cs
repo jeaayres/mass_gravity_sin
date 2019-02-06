@@ -14,6 +14,8 @@ public class GroundController : MonoBehaviour {
     //Gets the attached GameObject Rigidbody property
     private Rigidbody rb;
 
+    private float theta = 0.0f;
+
 
     void Start() 
     {
@@ -35,24 +37,30 @@ public class GroundController : MonoBehaviour {
     	// 0.1 degree per click
     	float horizontalForce = - Input.GetAxis ("Horizontal") * 0.1f;
         float verticalForce = Input.GetAxis ("Vertical") * 0.1f;
-        //Debug.Log("forca");
-        //Debug.Log(horizontalForce);
 
-        Vector3 force = new Vector3 (verticalForce, 0.0f, horizontalForce);
+        theta += Input.GetAxis("Mouse X") * 10;
+        float c = Mathf.Cos(theta * Mathf.PI / 180.0f);
+        float s = Mathf.Sin(theta * Mathf.PI / 180.0f);
+        Vector2 e1 = new Vector2(c, s);
+        Vector2 e2 = new Vector2(-s, c);
+
+        var fc = GameObject.Find("Follow Camera");
+        fc.transform.localRotation = Quaternion.Euler(10, theta, 0);
+        fc.GetComponent<CameraController>().theta = theta;
+
+        
+
+        var cf = horizontalForce * e1 + verticalForce * e2;
+        Vector3 force = new Vector3(cf.y, 0.0f, cf.x);
+
+
+        //Vector3 force = new Vector3 (verticalForce, 0.0f, horizontalForce);
 
         Quaternion rotationAngle = Quaternion.Euler(force * forceWeight);
 
         Quaternion rotation = rb.rotation * rotationAngle;
 
 
-	    // Clamp the X value
-	    //rotation.x = Mathf.Clamp(rotation.eulerAngles.x, 0, 90);
-	    // rotation.y = Mathf.Clamp(rotation.y, -90, 90);
-	    // rotation.z = Mathf.Clamp(rotation.z, -90, 90);
-
-        //Debug.Log(rb.rotation.eulerAngles.z);
-        //Debug.Log(rb.rotation.z);
-        //rb.MoveRotation(rotation);
 	    if     ((rb.rotation.eulerAngles.z >= maxRotation)       &&  rb.rotation.eulerAngles.z < 180 && rotationAngle.z > 0){}
 	   	else if((rb.rotation.eulerAngles.z <= 360 - maxRotation) &&  rb.rotation.eulerAngles.z > 180 && rotationAngle.z < 0){}
 	   	else if((rb.rotation.eulerAngles.x >= maxRotation)       &&  rb.rotation.eulerAngles.x < 180 && rotationAngle.x > 0){}
