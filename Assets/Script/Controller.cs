@@ -4,17 +4,12 @@ using System.Collections;
 
 public class Controller : MonoBehaviour {
 
-	//Variable speed was public and can accessed by Unity interface
-    //public float speed;
-
     private int count;
     private int score;
 
     public Text countText;
     public Text winText;
     public Text loseText;
-
-    //public ChuckSubInstance groundInstance;
 
     //Gets the attached GameObject Rigidbody property
     private Rigidbody rb;
@@ -35,12 +30,6 @@ public class Controller : MonoBehaviour {
     // FixedUpdate is called once aplly forces
     void FixedUpdate ()
     {
-        // float moveHorizontal = Input.GetAxis ("Horizontal");
-        // float moveVertical = Input.GetAxis ("Vertical");
-
-        // Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-
-        // rb.AddForce (movement * speed);
     }
 
     void OnTriggerEnter(Collider other) 
@@ -63,7 +52,6 @@ public class Controller : MonoBehaviour {
         else if (other.gameObject.CompareTag ("Death"))
         {
             loseText.text = "You died!";
-            //groundInstance.RunFile("Death.ck");
             GetComponent<ChuckSubInstance>().RunFile("Death.ck");
         }
 
@@ -76,8 +64,7 @@ public class Controller : MonoBehaviour {
         {
             onlyOne = false;
             winText.text = "Game finished. Points: " + score.ToString ();
-            //groundInstance.RunFile("Death.ck");
-            GetComponent<ChuckSubInstance>().RunFile("Vic.ck");
+            GetComponent<ChuckSubInstance>().RunFile("Victory.ck");
         }
     }
 }

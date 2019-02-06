@@ -50,26 +50,30 @@ class Keyboard extends Chubgraph {
 }
 
 
-//1 => global int stop;
+Keyboard kb => Gain g => dac;
+0.5 => g.gain;
 
-Keyboard kb => dac;
+1 => global int stop;
 
 kb.load(me.dir() + "piano");
 
 
+250 => float bpm;
+60 / bpm => float sixth;
+6 * sixth => float whole;
 
-100 => float bpm;
-60 / bpm => float quarter;
-4 * quarter => float whole;
+while (true) {
+    repeat(2){
+        kb.play([60, 64, 67]);
+        sixth::second => now;
+    }
+    kb.play([59, 62, 67]);
+    whole::second => now;
 
-// c d e
-// 60 62 64
-
-[64, 64, 64, 60, 62, 64, 64 , 64] @=> int notes[];
-[1,   1,  1,   2, 3, 1, 1, 4] @=> int dt[];
-
-for (0 => int i; i < 8; ++i) {
-    i % notes.cap() => int idx;
-    notes[idx] => kb.play;
-    (0.5 * dt[idx] * quarter)::second => now;
+    repeat(2){
+        kb.play([58, 62, 65]);
+        sixth::second => now;
+    }
+    kb.play([57, 60, 65]);
+    whole::second => now;
 }
