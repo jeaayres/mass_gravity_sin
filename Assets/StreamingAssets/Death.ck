@@ -52,7 +52,8 @@ class Keyboard extends Chubgraph {
 
 1 => global int stop;
 
-Keyboard kb => dac;
+Keyboard kb => Gain g => dac;
+0.33 => g.gain;
 
 kb.load(me.dir() + "piano");
 
@@ -70,7 +71,10 @@ kb.load(me.dir() + "piano");
 
 fun void right_hand() {
     while (true) {
-        notes[Math.random2(0, 4)] => kb.play;
+        notes[Math.random2(0, 4)] => int midi;
+        if (Math.randomf() > 0.5)
+            midi + 12 => midi;
+        midi => kb.play;
         quarter::second => now;
     }
 }
@@ -78,8 +82,10 @@ fun void right_hand() {
 spork~ right_hand();
 
 while (true) {
-    kb.play([57, 64]);
+    kb.play([57-12, 64-12, 57]);
+    if (Math.randomf() > 0.5)
+        kb.play(57-24);
     whole::second => now;
-    kb.play([57, 65]);
+    kb.play([57-12, 65-12, 57]);
     whole::second => now;
 }
