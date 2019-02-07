@@ -11,15 +11,24 @@ public class Controller : MonoBehaviour {
     public Text winText;
     public Text loseText;
 
+    public GameObject canvasPrefab;
+
     //Gets the attached GameObject Rigidbody property
     private Rigidbody rb;
 
     private bool onlyOne = true;
+    public ChuckMainInstance inst;
 
     // Start is called once GameMode starts
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
+
+        var c = Instantiate(canvasPrefab);
+        countText = c.transform.Find("Count text").gameObject.GetComponent<Text>();
+        winText = c.transform.Find("Win text").gameObject.GetComponent<Text>();
+        loseText = c.transform.Find("Lose text").gameObject.GetComponent<Text>();
+
         count = 0;
         score = 0;
         SetCountText();
@@ -40,19 +49,19 @@ public class Controller : MonoBehaviour {
             count = count + 1;
             score = score + 1;
             SetCountText();
-            GetComponent<ChuckSubInstance>().RunFile("PickUp.ck");
+            inst.RunFile("PickUp.ck");
         }
         else if (other.gameObject.CompareTag ("Bad"))
         {
             other.gameObject.SetActive (false);
             score = score - 1;
             SetCountText();
-            GetComponent<ChuckSubInstance>().RunFile("BadPickUp.ck");
+            inst.RunFile("BadPickUp.ck");
         }
         else if (other.gameObject.CompareTag ("Death"))
         {
             loseText.text = "You died!";
-            GetComponent<ChuckSubInstance>().RunFile("Death.ck");
+            inst.RunFile("Death.ck");
         }
 
     }
@@ -64,7 +73,7 @@ public class Controller : MonoBehaviour {
         {
             onlyOne = false;
             winText.text = "Game finished. Points: " + score.ToString ();
-            GetComponent<ChuckSubInstance>().RunFile("Victory.ck");
+            inst.RunFile("Victory.ck");
         }
     }
 }

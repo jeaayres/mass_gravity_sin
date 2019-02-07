@@ -9,7 +9,7 @@ public class GroundController : MonoBehaviour {
     public int maxRotation;
     public string backgroundMusic;
     public string hitEffect;
-    private int hitCount;
+
 
     //Gets the attached GameObject Rigidbody property
     private Rigidbody rb;
@@ -20,16 +20,15 @@ public class GroundController : MonoBehaviour {
     void Start() 
     {
         rb = GetComponent<Rigidbody>();
-        hitCount = 0;
-        GetComponent<ChuckSubInstance>().RunFile(backgroundMusic+".ck");
+        GetComponent<ChuckMainInstance>().RunFile(backgroundMusic+".ck");
     }
 
     void OnCollisionEnter (Collision other)
     {
         Debug.Log(other.relativeVelocity.magnitude);
 
-        GetComponent<ChuckSubInstance>().SetFloat("vel", other.relativeVelocity.magnitude);
-        GetComponent<ChuckSubInstance>().RunFile(hitEffect+".ck");
+        GetComponent<ChuckMainInstance>().SetFloat("vel", other.relativeVelocity.magnitude);
+        GetComponent<ChuckMainInstance>().RunFile(hitEffect+".ck");
     }
 
     void FixedUpdate() 
@@ -44,7 +43,8 @@ public class GroundController : MonoBehaviour {
         Vector2 e1 = new Vector2(c, s);
         Vector2 e2 = new Vector2(-s, c);
 
-        var fc = GameObject.Find("Follow Camera");
+        //var fc = GameObject.Find("Follow Camera");
+        var fc = GetComponent<GameplayController>().followCamera;
         fc.transform.localRotation = Quaternion.Euler(10, theta, 0);
         fc.GetComponent<CameraController>().theta = theta;
 

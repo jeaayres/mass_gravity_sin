@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour {
     // Start is called once GameMode starts
     void Start ()
     {
-        offset = transform.position - player.transform.position;
+        //offset = transform.position - player.transform.position;
     }
     
     // LateUpdate is called once a frame, after all itens process Update
